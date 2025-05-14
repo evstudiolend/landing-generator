@@ -1,0 +1,69 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Генератор лендинга</title>
+</head>
+<body style="font-family: Arial, sans-serif; max-width: 800px; margin: auto; padding: 20px;">
+  <h2>Генератор текста для продающего лендинга</h2>
+  <p>Заполните все поля. Чем подробнее и конкретнее информация — тем лучше результат:</p>
+
+  <textarea id="product_name" placeholder="Название продукта" rows="1" style="width:100%;margin-bottom:10px;"></textarea>
+  <textarea id="product_description" placeholder="Описание продукта" rows="2" style="width:100%;margin-bottom:10px;"></textarea>
+  <textarea id="company_info" placeholder="Информация о компании" rows="2" style="width:100%;margin-bottom:10px;"></textarea>
+  <textarea id="audience_analysis" placeholder="Анализ целевой аудитории" rows="2" style="width:100%;margin-bottom:10px;"></textarea>
+  <textarea id="competitors_info" placeholder="Информация о конкурентах" rows="2" style="width:100%;margin-bottom:10px;"></textarea>
+  <textarea id="unique_selling_points" placeholder="Уникальные преимущества (УТП)" rows="2" style="width:100%;margin-bottom:10px;"></textarea>
+  <textarea id="main_offer" placeholder="Оффер" rows="1" style="width:100%;margin-bottom:10px;"></textarea>
+  <textarea id="bonuses" placeholder="Бонусы" rows="1" style="width:100%;margin-bottom:10px;"></textarea>
+  <textarea id="case_studies" placeholder="Кейсы" rows="2" style="width:100%;margin-bottom:10px;"></textarea>
+  <textarea id="testimonials" placeholder="Отзывы" rows="2" style="width:100%;margin-bottom:10px;"></textarea>
+  <textarea id="goal" placeholder="Цель лендинга" rows="1" style="width:100%;margin-bottom:10px;"></textarea>
+  <textarea id="style" placeholder="Желаемый стиль текста" rows="1" style="width:100%;margin-bottom:20px;"></textarea>
+
+  <button onclick="generateLanding()" style="padding: 12px 24px; font-size: 16px;">Сгенерировать текст</button>
+
+  <div id="landingResult" style="margin-top: 24px; white-space: pre-wrap; font-family: Georgia, serif;"></div>
+
+  <script>
+    async function generateLanding() {
+      const data = {
+        product_name: document.getElementById("product_name").value,
+        product_description: document.getElementById("product_description").value,
+        company_info: document.getElementById("company_info").value,
+        audience_analysis: document.getElementById("audience_analysis").value,
+        competitors_info: document.getElementById("competitors_info").value,
+        unique_selling_points: document.getElementById("unique_selling_points").value,
+        main_offer: document.getElementById("main_offer").value,
+        bonuses: document.getElementById("bonuses").value,
+        case_studies: document.getElementById("case_studies").value,
+        testimonials: document.getElementById("testimonials").value,
+        goal: document.getElementById("goal").value,
+        style: document.getElementById("style").value
+      };
+
+      document.getElementById("landingResult").innerHTML = "⏳ Генерация текста...";
+
+      try {
+        const response = await fetch("https://gpt-audience-service.onrender.com/generate-landing", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        if (result.result) {
+          document.getElementById("landingResult").innerHTML = "<h3>Результат:</h3><p>" + result.result + "</p>";
+        } else {
+          document.getElementById("landingResult").innerHTML = "❌ Ошибка: " + (result.error || "Неизвестная ошибка");
+        }
+      } catch (error) {
+        document.getElementById("landingResult").innerHTML = "❌ Ошибка при отправке запроса";
+      }
+    }
+  </script>
+</body>
+</html>
